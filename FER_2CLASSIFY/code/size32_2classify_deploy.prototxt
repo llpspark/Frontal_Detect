@@ -1,0 +1,435 @@
+name: "Res_2classify"
+input: "data"
+input_dim: 1
+input_dim: 1
+input_dim: 32
+input_dim: 32
+
+
+#layer {
+#name: "data"
+#type: "ImageData"
+#top: "data"
+#top: "label"
+#include {
+#phase: TRAIN
+#}
+#transform_param {
+#mirror: true
+#}
+#image_data_param {
+#source: "/home/spark/grocery/FER/datasets/2_class/train_val_data/train.txt"
+#batch_size: 512
+#is_color: true
+#}
+#}
+#
+#layer {
+#name: "data"
+#type: "ImageData"
+#top: "data"
+#top: "label"
+#include {
+#phase: TEST
+#}
+#transform_param {
+#mirror: false
+#}
+#image_data_param {
+#source: "/home/spark/grocery/FER/datasets/2_class/train_val_data/val.txt"
+#batch_size: 256
+#is_color: true
+#}
+#}
+
+layer {
+    bottom: "data"
+    top: "conv1"
+    name: "conv1"
+    type: "Convolution"
+    		param{
+          lr_mult: 1
+          decay_mult: 1
+          }
+
+    		param{
+          lr_mult: 2
+          decay_mult: 0
+          }
+    convolution_param {
+
+		    num_output: 64
+        kernel_size: 3
+        pad: 1
+        stride: 1
+    		weight_filler {
+      		type: "xavier"
+      		std: 0.01
+      	}	
+  		bias_filler {
+    		type: "constant"
+    		value: 0.2
+    		}
+
+        bias_term: true
+    }
+}
+
+layer {
+    bottom: "conv1"
+    top: "conv1"
+    name: "bn_conv1"
+    type: "BatchNorm"
+		param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    #batch_norm_param {
+        #use_global_stats: false
+    #}
+}
+
+layer {
+    bottom: "conv1"
+    top: "conv1"
+    name: "scale_conv1"
+    type: "Scale"
+    scale_param {
+        bias_term: true
+    }
+}
+
+layer {
+    bottom: "conv1"
+    top: "conv1"
+    name: "conv1_relu"
+    type: "ReLU"
+}
+
+layer {
+    bottom: "conv1"
+    top: "pool1"
+    name: "pool1"
+    type: "Pooling"
+    pooling_param {
+        kernel_size: 3
+        stride: 2
+        pool: MAX
+    }
+}
+
+
+
+layer {
+    bottom: "pool1"
+    top: "res2a_branch2a"
+    name: "res2a_branch2a"
+    type: "Convolution"
+        param{
+          lr_mult: 1
+          decay_mult: 1
+          }
+
+        param{
+          lr_mult: 2
+          decay_mult: 0
+          }
+    convolution_param {
+
+				num_output: 64
+        kernel_size: 1
+        pad: 0
+        stride: 1
+	     	weight_filler {
+          type: "xavier"
+          std: 0.01
+        }
+      bias_filler {
+        type: "constant"
+        value: 0.2
+        }
+
+        bias_term: true
+
+    }
+}
+
+layer {
+    bottom: "res2a_branch2a"
+    top: "res2a_branch2a"
+    name: "bn2a_branch2a"
+    type: "BatchNorm"
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    #batch_norm_param {
+        #use_global_stats: false
+    #}
+}
+
+layer {
+    bottom: "res2a_branch2a"
+    top: "res2a_branch2a"
+    name: "scale2a_branch2a"
+    type: "Scale"
+    scale_param {
+        bias_term: true
+    }
+}
+
+layer {
+    bottom: "res2a_branch2a"
+    top: "res2a_branch2a"
+    name: "res2a_branch2a_relu"
+    type: "ReLU"
+}
+layer {
+    bottom: "res2a_branch2a"
+    top: "pool2"
+    name: "pool2"
+    type: "Pooling"
+    pooling_param {
+        kernel_size: 3
+        stride: 2
+        pool: MAX
+    }
+}
+
+
+layer {
+    bottom: "pool2"
+    top: "res2a_branch2b"
+    name: "res2a_branch2b"
+    type: "Convolution"
+				param{
+          lr_mult: 1
+          decay_mult: 1
+          }
+
+        param{
+          lr_mult: 2
+          decay_mult: 0
+          }
+    convolution_param {
+
+        num_output: 64
+        kernel_size: 3
+        pad: 1
+        stride: 1
+        weight_filler {
+          type: "xavier"
+          std: 0.01
+        }
+      bias_filler {
+        type: "constant"
+        value: 0.2
+        }
+
+        bias_term: true
+
+    }
+}
+
+layer {
+    bottom: "res2a_branch2b"
+    top: "res2a_branch2b"
+    name: "bn2a_branch2b"
+    type: "BatchNorm"
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    #batch_norm_param {
+        #use_global_stats: false
+    #}
+}
+
+layer {
+    bottom: "res2a_branch2b"
+    top: "res2a_branch2b"
+    name: "scale2a_branch2b"
+    type: "Scale"
+    scale_param {
+        bias_term: true
+    }
+}
+
+layer {
+    bottom: "res2a_branch2b"
+    top: "res2a_branch2b"
+    name: "res2a_branch2b_relu"
+    type: "ReLU"
+}
+layer {
+    bottom: "res2a_branch2b"
+    top: "pool3"
+    name: "pool3"
+    type: "Pooling"
+    pooling_param {
+        kernel_size: 3
+        stride: 2
+        pool: MAX
+    }
+}
+
+
+layer {
+    bottom: "pool3"
+    top: "res2a_branch2c"
+    name: "res2a_branch2c"
+    type: "Convolution"
+        param{
+          lr_mult: 1
+          decay_mult: 1
+          }
+
+        param{
+          lr_mult: 2
+          decay_mult: 0
+          }
+    convolution_param {
+
+        num_output: 32
+        kernel_size: 1
+        pad: 0
+        stride: 1
+        weight_filler {
+          type: "xavier"
+          std: 0.01
+        }
+      bias_filler {
+        type: "constant"
+        value: 0.2
+        }
+
+        bias_term: true
+
+    }
+}
+
+layer {
+    bottom: "res2a_branch2c"
+    top: "res2a_branch2c"
+    name: "bn2a_branch2c"
+    type: "BatchNorm"
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    param{
+          lr_mult: 0
+          decay_mult: 0
+          }
+
+    #batch_norm_param {
+        #use_global_stats: false
+    #}
+}
+
+layer {
+    bottom: "res2a_branch2c"
+    top: "res2a_branch2c"
+    name: "scale2a_branch2c"
+    type: "Scale"
+    scale_param {
+        bias_term: true
+    }
+}
+layer {
+    bottom: "res2a_branch2c"
+    top: "global_pool"
+    name: "global_pool"
+    type: "Pooling"
+    pooling_param {
+				pool:AVE
+        global_pooling:true
+    }
+}
+layer {
+  name: "fc"
+  type: "InnerProduct"
+  bottom: "global_pool"
+  top: "fc"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+
+
+#layer {
+#  name: "accuracy"
+#  type: "Accuracy"
+#  bottom: "fc"
+#  bottom: "label"
+#  top: "accuracy"
+#  include {
+#    phase: TEST
+#  }
+#}
+#layer {
+#  name: "loss"
+#  type: "SoftmaxWithLoss"
+#  bottom: "fc"
+#  bottom: "label"
+#  top: "loss"
+#}
+
+
+layer {
+  bottom:"fc"
+  top: "out"
+  name: "out"
+  type: "Softmax"
+}
