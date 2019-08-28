@@ -8,7 +8,6 @@
 * 模型选用：
   * 基础结构：~~res_50第一层+pooling+修改的res_block~~   （尝试了当前主流的网络结构后选用）dense-net前两个Block，使用全局Pooling接分类层，使用全局Pooling接分类层
   * 结构修改：~~在res_block基础上将最后的卷积核个数由256调整至32~~    调整对应的卷积核数量
-
 * 训练测试code相关
   * 训练[执行](./code/train_2classify.sh)、[solver](./code/size32_2classify_solver.prototxt)、[训练网络proto](./code/size32_2classify_train_val_v15_dense.prototxt)
   * [python多进程FER二分类](./code/classify.py)，并基于测试得分进行[数据分析](./code/data_analysis.py)及数据进一步筛选。
